@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taha Ezzaafrani | Finance & Risk Management</title>
+  <meta name="description" content="Jeune diplômé passionné par la finance moderne, la gestion du risque de change et l'innovation technologique dans les métiers financiers." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ─── CANVAS BACKGROUND ─────────────────────────────── -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ─── CURSOR ────────────────────────────────────────── -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-trail" id="cursor-trail"></div>
+
+  <!-- ─── NAVBAR ────────────────────────────────────────── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo">
+      <span class="logo-bracket">[</span>TE<span class="logo-bracket">]</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#home" class="nav-link active">Accueil</a></li>
+      <li><a href="#formation" class="nav-link">Formation</a></li>
+      <li><a href="#competences" class="nav-link">Compétences</a></li>
+      <li><a href="#certifications" class="nav-link">Certifications</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="theme-switcher" id="theme-switcher" title="Changer de thème">
+        <span class="theme-icon" id="theme-icon">◐</span>
+        <div class="theme-dropdown" id="theme-dropdown">
+          <button class="theme-btn" data-theme="dark">🌑 Sombre</button>
+          <button class="theme-btn" data-theme="light">☀️ Clair</button>
+          <button class="theme-btn" data-theme="ocean">🌊 Océan</button>
+          <button class="theme-btn" data-theme="gold">✦ Or Royal</button>
+        </div>
+      </div>
+      <a href="CV_LaTex_TE.pdf" download class="btn-download" id="cv-download">
+        <span class="btn-icon">↓</span> Télécharger CV
+      </a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ─── HERO ──────────────────────────────────────────── -->
+  <section class="hero" id="home">
+    <div class="hero-lines">
+      <div class="line l1"></div>
+      <div class="line l2"></div>
+      <div class="line l3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-tag reveal" data-delay="0">
+        <span class="tag-dot"></span> Disponible pour opportunités
+      </div>
+      <h1 class="hero-title reveal" data-delay="1">
+        <span class="title-small">Bonjour, je suis</span>
+        <span class="title-name">Taha<br>Ezzaafrani</span>
+      </h1>
+      <p class="hero-role reveal" data-delay="2">
+        <span class="role-text" id="typed-role"></span><span class="cursor-blink">|</span>
+      </p>
+      <p class="hero-desc reveal" data-delay="3">
+        Passionné par la finance moderne, la gestion du risque de change<br>
+        et l'innovation technologique dans les métiers financiers.
+      </p>
+      <div class="hero-actions reveal" data-delay="4">
+        <a href="#competences" class="btn-primary">Voir mes compétences</a>
+        <a href="#contact" class="btn-ghost">Me contacter</a>
+      </div>
+      <div class="hero-stats reveal" data-delay="5">
+        <div class="stat">
+          <span class="stat-num" data-count="3">0</span>
+          <span class="stat-label">Langues</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num" data-count="5">0</span>
+          <span class="stat-label">Produits dérivés</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num" data-count="2">0</span>
+          <span class="stat-label">Certifications</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-photo reveal" data-delay="2">
+      <div class="photo-frame">
+        <div class="photo-glow"></div>
+        <div class="photo-inner">
+          <img src="photo.jpg" alt="Taha Ezzaafrani" onerror="this.style.display='none'; document.getElementById('photo-placeholder').style.display='flex'"/>
+          <div class="photo-placeholder" id="photo-placeholder">
+            <span class="placeholder-initials">TE</span>
+            <span class="placeholder-sub">Photo professionnelle</span>
+          </div>
+        </div>
+        <div class="photo-badge">
+          <span>MSc Finance</span>
+        </div>
+      </div>
+      <div class="float-card fc1">
+        <span class="fc-icon">📈</span>
+        <div>
+          <div class="fc-title">Risque de Change</div>
+          <div class="fc-sub">Options · Forward · Futures</div>
+        </div>
+      </div>
+      <div class="float-card fc2">
+        <span class="fc-icon">🎓</span>
+        <div>
+          <div class="fc-title">Master IFF</div>
+          <div class="fc-sub">Université Ibn Tofaïl</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span>Défiler</span>
+    </div>
+  </section>
+
+  <!-- ─── FORMATION ─────────────────────────────────────── -->
+  <section class="section" id="formation">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">01</span>
+        <h2 class="section-title">Formation <span class="accent">Académique</span></h2>
+        <p class="section-sub">Parcours académique solide en finance et gestion</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item reveal-left">
+          <div class="timeline-dot">
+            <span>M</span>
+          </div>
+          <div class="timeline-card">
+            <div class="tc-header">
+              <div>
+                <h3 class="tc-title">Master en Ingénierie Financière et Fiscale</h3>
+                <p class="tc-place">Université Ibn Tofaïl – Kénitra</p>
+              </div>
+              <span class="tc-badge">En cours</span>
+            </div>
+            <ul class="tc-list">
+              <li>Projet de fin d'études : <em>L'efficacité de la couverture contre le risque de change pour les entreprises privées au Maroc</em></li>
+              <li>Mémoire sur les stratégies de couverture du risque de change</li>
+            </ul>
+            <div class="tc-tags">
+              <span>Risk Management</span>
+              <span>Finance Internationale</span>
+              <span>Fiscalité</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal-right">
+          <div class="timeline-dot">
+            <span>L</span>
+          </div>
+          <div class="timeline-card">
+            <div class="tc-header">
+              <div>
+                <h3 class="tc-title">Licence en Gestion Financière</h3>
+                <p class="tc-place">Université Ibn Tofaïl – Kénitra</p>
+              </div>
+              <span class="tc-badge tc-badge--done">Obtenu</span>
+            </div>
+            <ul class="tc-list">
+              <li>Formation approfondie en analyse financière, comptabilité et fiscalité</li>
+              <li>Projet : L'apport de l'audit interne dans le secteur public</li>
+            </ul>
+            <div class="tc-tags">
+              <span>Analyse Financière</span>
+              <span>Comptabilité</span>
+              <span>Audit</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal-left">
+          <div class="timeline-dot">
+            <span>B</span>
+          </div>
+          <div class="timeline-card">
+            <div class="tc-header">
+              <div>
+                <h3 class="tc-title">Baccalauréat en Sciences de la Vie et de la Terre</h3>
+                <p class="tc-place">Lycée Ibn Batouta – Kénitra</p>
+              </div>
+              <span class="tc-badge tc-badge--done">Obtenu</span>
+            </div>
+            <ul class="tc-list">
+              <li>Obtention du baccalauréat scientifique</li>
+            </ul>
+            <div class="tc-tags">
+              <span>Sciences</span>
+              <span>Biologie</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── COMPÉTENCES ───────────────────────────────────── -->
+  <section class="section section--alt" id="competences">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">02</span>
+        <h2 class="section-title">Compétences <span class="accent">Professionnelles</span></h2>
+        <p class="section-sub">Un ensemble de compétences techniques et analytiques</p>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-category reveal" data-delay="0">
+          <div class="skc-icon">💹</div>
+          <h3 class="skc-title">Finance</h3>
+          <div class="skill-bars">
+            <div class="skill-bar-item">
+              <div class="sb-label"><span>Analyse Financière</span><span>90%</span></div>
+              <div class="sb-track"><div class="sb-fill" data-w="90"></div></div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="sb-label"><span>Gestion du Risque de Change</span><span>88%</span></div>
+              <div class="sb-track"><div class="sb-fill" data-w="88"></div></div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="sb-label"><span>Produits Dérivés</span><span>85%</span></div>
+              <div class="sb-track"><div class="sb-fill" data-w="85"></div></div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="sb-label"><span>Évaluation d'Entreprises</span><span>80%</span></div>
+              <div class="sb-track"><div class="sb-fill" data-w="80"></div></div>
+            </div>
+          </div>
+          <div class="skc-tags">
+            <span>Options</span><span>Forward</span><span>Futures</span><span>Marchés de Change</span>
+          </div>
+        </div>
+
+        <div class="skill-category reveal" data-delay="1">
+          <div class="skc-icon">💻</div>
+          <h3 class="skc-title">Informatique</h3>
+          <div class="skill-bars">
+            <div class="skill-bar-item">
+              <div class="sb-label"><span>Excel / Office</span><span>92%</span></div>
+              <div class="sb-track"><div class="sb-fill" data-w="92"></div></div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="sb-label"><span>SQL</span><span>75%</span></div>
+              <div class="sb-track"><div class="sb-fill" data-w="75"></div></div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="sb-label"><span>HTML / CSS</span><span>70%</span></div>
+              <div class="sb-track"><div class="sb-fill" data-w="70"></div></div>
+            </div>
+          </div>
+          <div class="skc-tags">
+            <span>Excel</span><span>Word</span><span>PowerPoint</span><span>SQL</span><span>HTML</span><span>CSS</span>
+          </div>
+        </div>
+
+        <div class="skill-category reveal" data-delay="2">
+          <div class="skc-icon">📊</div>
+          <h3 class="skc-title">Analytique</h3>
+          <div class="skill-bars">
+            <div class="skill-bar-item">
+              <div class="sb-label"><span>Analyse de Données</span><span>85%</span></div>
+              <div class="sb-track"><div class="sb-fill" data-w="85"></div></div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="sb-label"><span>Visualisation</span><span>80%</span></div>
+              <div class="sb-track"><div class="sb-fill" data-w="80"></div></div>
+            </div>
+            <div class="skill-bar-item">
+              <div class="sb-label"><span>Méthodes Quantitatives</span><span>78%</span></div>
+              <div class="sb-track"><div class="sb-fill" data-w="78"></div></div>
+            </div>
+          </div>
+          <div class="skc-tags">
+            <span>Data Analysis</span><span>Reporting</span><span>Visualisation</span>
+          </div>
+        </div>
+
+        <div class="skill-category reveal" data-delay="3">
+          <div class="skc-icon">🌐</div>
+          <h3 class="skc-title">Langues</h3>
+          <div class="lang-grid">
+            <div class="lang-item">
+              <div class="lang-circle" data-pct="100">
+                <svg viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5" class="lang-bg"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5" class="lang-fg" stroke-dasharray="100 100" stroke-dashoffset="25"/>
+                </svg>
+                <span>100%</span>
+              </div>
+              <p>Arabe</p>
+              <small>Natif</small>
+            </div>
+            <div class="lang-item">
+              <div class="lang-circle" data-pct="90">
+                <svg viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5" class="lang-bg"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5" class="lang-fg" stroke-dasharray="90 100" stroke-dashoffset="25"/>
+                </svg>
+                <span>90%</span>
+              </div>
+              <p>Français</p>
+              <small>Courant</small>
+            </div>
+            <div class="lang-item">
+              <div class="lang-circle" data-pct="60">
+                <svg viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5" class="lang-bg"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5" class="lang-fg" stroke-dasharray="60 100" stroke-dashoffset="25"/>
+                </svg>
+                <span>60%</span>
+              </div>
+              <p>Anglais</p>
+              <small>Intermédiaire</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CERTIFICATIONS ────────────────────────────────── -->
+  <section class="section" id="certifications">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">03</span>
+        <h2 class="section-title">Certifications <span class="accent">En Ligne</span></h2>
+        <p class="section-sub">Formation continue et développement de compétences</p>
+      </div>
+      <div class="cert-grid">
+        <div class="cert-card reveal" data-delay="0">
+          <div class="cert-logo">
+            <span>U</span>
+          </div>
+          <div class="cert-body">
+            <h3>Introduction à la Programmation</h3>
+            <p class="cert-provider">Codershiyar / Udemy</p>
+            <div class="cert-tags">
+              <span>SQL</span><span>HTML</span><span>CSS</span><span>LaTeX</span>
+            </div>
+          </div>
+          <div class="cert-shine"></div>
+        </div>
+        <div class="cert-card reveal" data-delay="1">
+          <div class="cert-logo cert-logo--coursera">
+            <span>C</span>
+          </div>
+          <div class="cert-body">
+            <h3>Bases de l'Analyse de Données</h3>
+            <p class="cert-provider">Coursera</p>
+            <div class="cert-tags">
+              <span>Data Analysis</span><span>Statistics</span>
+            </div>
+          </div>
+          <div class="cert-shine"></div>
+        </div>
+      </div>
+
+      <!-- Interests -->
+      <div class="interests-block reveal">
+        <h3 class="interests-title">Centres d'Intérêt</h3>
+        <div class="interests-grid">
+          <div class="interest-item">
+            <span class="interest-icon">⚽</span>
+            <div>
+              <p class="interest-cat">Sports</p>
+              <p class="interest-val">Football · Running · Calisthenics · Beach Ball</p>
+            </div>
+          </div>
+          <div class="interest-item">
+            <span class="interest-icon">📚</span>
+            <div>
+              <p class="interest-cat">Lecture</p>
+              <p class="interest-val">Finance · Marchés de Change · Développement Informatique</p>
+            </div>
+          </div>
+          <div class="interest-item">
+            <span class="interest-icon">🚀</span>
+            <div>
+              <p class="interest-cat">Développement</p>
+              <p class="interest-val">Apprentissage en ligne · Développement personnel</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTACT ───────────────────────────────────────── -->
+  <section class="section section--alt" id="contact">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">04</span>
+        <h2 class="section-title">Me <span class="accent">Contacter</span></h2>
+        <p class="section-sub">Disponible pour toute opportunité professionnelle</p>
+      </div>
+      <div class="contact-layout">
+        <div class="contact-info reveal-left">
+          <div class="contact-item ci-hover">
+            <span class="ci-icon">📞</span>
+            <div>
+              <p class="ci-label">Téléphone</p>
+              <a href="tel:+212681056575" class="ci-value">06 81 05 65 75</a>
+            </div>
+          </div>
+          <div class="contact-item ci-hover">
+            <span class="ci-icon">✉️</span>
+            <div>
+              <p class="ci-label">Email</p>
+              <a href="mailto:taha.ezzaafrani@gmail.com" class="ci-value">taha.ezzaafrani@gmail.com</a>
+            </div>
+          </div>
+          <div class="contact-item ci-hover">
+            <span class="ci-icon">📍</span>
+            <div>
+              <p class="ci-label">Localisation</p>
+              <p class="ci-value">Kénitra, Maroc</p>
+            </div>
+          </div>
+          <a href="CV_LaTex_TE.pdf" download class="btn-download-lg">
+            <span>↓</span> Télécharger mon CV
+          </a>
+        </div>
+        <div class="contact-form reveal-right">
+          <div class="form-group">
+            <label>Nom</label>
+            <input type="text" placeholder="Votre nom" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="votre@email.com" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea placeholder="Votre message..." class="form-input form-textarea"></textarea>
+          </div>
+          <button class="btn-primary btn-send" onclick="sendMessage(this)">
+            Envoyer le message →
+          </button>
+          <p class="form-note" id="form-note"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">[TE]</div>
+      <p class="footer-copy">© 2025 Taha Ezzaafrani · Finance & Risk Management</p>
+      <button class="back-top" onclick="scrollToTop()">↑ Haut</button>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
+
