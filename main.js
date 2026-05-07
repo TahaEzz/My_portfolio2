@@ -166,10 +166,10 @@ document.addEventListener('DOMContentLoaded', () => {
         typedEl.textContent = word.slice(0, ci - 1);
         ci--;
         if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; setTimeout(tick, 320); return; }
-        setTimeout(tick, 36);
+        setTimeout(tick, 10);
       }
     }
-    setTimeout(tick, 500);
+    setTimeout(tick, 900);
   }
 
   /* ────────────────────────────────────────────────
