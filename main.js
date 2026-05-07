@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         typedEl.textContent = word.slice(0, ci - 1);
         ci--;
-        if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; setTimeout(tick, 200); return; }
+        if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; setTimeout(tick, 360); return; }
         setTimeout(tick, 36);
       }
     }
