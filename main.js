@@ -1,259 +1,338 @@
-/* ═══════════════════════════════════════════════════════════
-   TAHA EZZAAFRANI – Portfolio JS (Optimisé)
-   ═══════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════
+   TAHA EZZAAFRANI – main.js  (version corrigée)
+════════════════════════════════════════════════════ */
 
+/* ── everything runs after DOM is fully loaded ── */
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Initialisation immédiate
-  document.body.style.opacity = '1';
-  initTheme();
-  initCanvas();
-  initReveal(); // Correction opacité
-  initTypewriter();
-  initCounters();
-  initNavigation();
-  initCursor();
-});
 
-/* ─── SYSTÈME DE THÈME ───────────────────────────────────── */
-function initTheme() {
-  const themes = ['dark', 'light', 'ocean', 'gold'];
-  let currentTheme = localStorage.getItem('portfolio-theme') || 'dark';
-  const themeIcons = { dark: '🌑', light: '☀️', ocean: '🌊', gold: '✦' };
+  /* ────────────────────────────────────────────────
+     1. PAGE FADE-IN
+  ──────────────────────────────────────────────── */
+  document.body.classList.add('loaded');
 
-  const applyTheme = (theme) => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('portfolio-theme', theme);
-    const iconEl = document.getElementById('theme-icon');
-    if (iconEl) iconEl.textContent = themeIcons[theme] || '◐';
-    // On relance le canvas pour adapter les couleurs
-    initCanvas();
+  /* ────────────────────────────────────────────────
+     2. THEME SYSTEM
+  ──────────────────────────────────────────────── */
+  const THEME_ICONS = {
+    dark:  { show: 'ti-dark',  hide: ['ti-light','ti-ocean','ti-gold'] },
+    light: { show: 'ti-light', hide: ['ti-dark','ti-ocean','ti-gold']  },
+    ocean: { show: 'ti-ocean', hide: ['ti-dark','ti-light','ti-gold']  },
+    gold:  { show: 'ti-gold',  hide: ['ti-dark','ti-light','ti-ocean'] },
   };
 
-  applyTheme(currentTheme);
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem('te-theme', t);
+    // swap icon
+    const cfg = THEME_ICONS[t];
+    if (cfg) {
+      document.getElementById(cfg.show).style.display = '';
+      cfg.hide.forEach(id => { document.getElementById(id).style.display = 'none'; });
+    }
+    setTimeout(initCanvas, 60); // re-colour particles
+  }
 
-  const switcher = document.getElementById('theme-switcher');
-  if (switcher) {
-    switcher.addEventListener('click', (e) => {
+  const savedTheme = localStorage.getItem('te-theme') || 'dark';
+  applyTheme(savedTheme);
+
+  const themeSw = document.getElementById('theme-sw');
+  themeSw.addEventListener('click', () => themeSw.classList.toggle('open'));
+  document.addEventListener('click', e => {
+    if (!themeSw.contains(e.target)) themeSw.classList.remove('open');
+  });
+  document.querySelectorAll('.theme-opt').forEach(btn => {
+    btn.addEventListener('click', e => {
       e.stopPropagation();
-      switcher.classList.toggle('open');
-    });
-  }
-
-  document.querySelectorAll('.theme-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
       applyTheme(btn.dataset.theme);
-      if (switcher) switcher.classList.remove('open');
+      themeSw.classList.remove('open');
     });
   });
 
-  document.addEventListener('click', () => switcher?.classList.remove('open'));
-}
-
-/* ─── SCROLL REVEAL (SOLUTION OPACITÉ) ───────────────────── */
-function initReveal() {
-  const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-  
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const delay = parseFloat(entry.target.dataset.delay || 0);
-        setTimeout(() => {
-          entry.target.classList.add('revealed');
-        }, delay * 120);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, observerOptions);
-
-  revealElements.forEach(el => observer.observe(el));
-
-  // Animation spécifique barres de compétences
-  const skillBars = document.querySelectorAll('.sb-fill');
-  const skillObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const bar = entry.target;
-        bar.style.width = bar.dataset.w + '%';
-        skillObserver.unobserve(bar);
-      }
-    });
-  });
-  skillBars.forEach(bar => skillObserver.observe(bar));
-}
-
-/* ─── CANVAS PARTICULES ───────────────────────────────────── */
-let animFrame;
-function initCanvas() {
-  const canvas = document.getElementById('bg-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  
-  const resize = () => {
-    canvas.width = window.innerWidth;
+  /* ────────────────────────────────────────────────
+     3. CANVAS PARTICLE NETWORK
+  ──────────────────────────────────────────────── */
+  let raf;
+  function initCanvas() {
+    const canvas = document.getElementById('bg-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
-  };
-  window.addEventListener('resize', resize);
-  resize();
+    if (raf) cancelAnimationFrame(raf);
 
-  const style = getComputedStyle(document.documentElement);
-  const accentHex = style.getPropertyValue('--accent').trim() || '#63b3ed';
+    function getAccentRGB() {
+      const hex = getComputedStyle(document.documentElement)
+                    .getPropertyValue('--acc').trim().replace('#','');
+      const full = hex.length === 3
+        ? hex.split('').map(c => c+c).join('')
+        : hex;
+      const n = parseInt(full, 16);
+      return [(n>>16)&255, (n>>8)&255, n&255];
+    }
 
-  const hexToRgb = (hex) => {
-    hex = hex.replace('#', '');
-    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-    const n = parseInt(hex, 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  };
+    const N = Math.min(65, Math.floor(canvas.width / 18));
+    const pts = Array.from({length: N}, () => ({
+      x:  Math.random() * canvas.width,
+      y:  Math.random() * canvas.height,
+      vx: (Math.random() - .5) * .28,
+      vy: (Math.random() - .5) * .28,
+      r:  Math.random() * 1.5 + .4,
+      a:  Math.random() * .45 + .15,
+    }));
 
-  const rgb = hexToRgb(accentHex);
-  const particles = Array.from({ length: 60 }, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 0.4,
-    vy: (Math.random() - 0.5) * 0.4,
-    radius: Math.random() * 1.5 + 0.5,
-    alpha: Math.random() * 0.4 + 0.1
-  }));
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const rgb = getAccentRGB();
+      const [r, g, b] = rgb;
 
-  if (animFrame) cancelAnimationFrame(animFrame);
+      pts.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0)              p.x = canvas.width;
+        if (p.x > canvas.width)   p.x = 0;
+        if (p.y < 0)              p.y = canvas.height;
+        if (p.y > canvas.height)  p.y = 0;
 
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${g},${b},${p.a})`;
+        ctx.fill();
+      });
 
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${p.alpha})`;
-      ctx.fill();
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const d  = Math.sqrt(dx*dx + dy*dy);
+          if (d < 118) {
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = `rgba(${r},${g},${b},${(1 - d/118) * .07})`;
+            ctx.lineWidth = .5;
+            ctx.stroke();
+          }
+        }
+      }
+      raf = requestAnimationFrame(draw);
+    }
+    draw();
+  }
+  initCanvas();
+  window.addEventListener('resize', () => {
+    const c = document.getElementById('bg-canvas');
+    if (c) { c.width = window.innerWidth; c.height = window.innerHeight; }
+  });
+
+  /* ────────────────────────────────────────────────
+     4. CUSTOM CURSOR
+  ──────────────────────────────────────────────── */
+  const cur   = document.getElementById('cursor');
+  const trail = document.getElementById('cursor-trail');
+  if (cur && trail) {
+    document.addEventListener('mousemove', e => {
+      cur.style.left   = e.clientX + 'px';
+      cur.style.top    = e.clientY + 'px';
+      setTimeout(() => {
+        trail.style.left = e.clientX + 'px';
+        trail.style.top  = e.clientY + 'px';
+      }, 80);
     });
-    animFrame = requestAnimationFrame(draw);
+    document.querySelectorAll('a, button, .skill-card, .cert-card, .tl-card, .int-card').forEach(el => {
+      el.addEventListener('mouseenter', () => cur.classList.add('big'));
+      el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+    });
   }
-  draw();
-}
 
-/* ─── TYPED TEXT ─────────────────────────────────────────── */
-function initTypewriter() {
-  const roles = ['Analyste Financier', 'Gestionnaire du Risque de Change', 'Expert en Produits Dérivés', 'Passionné de Finance Moderne'];
-  let roleIdx = 0, charIdx = 0, deleting = false;
+  /* ────────────────────────────────────────────────
+     5. TYPED TEXT
+  ──────────────────────────────────────────────── */
+  const roles = [
+    'Analyste Financier',
+    'Gestionnaire du Risque de Change',
+    'Expert en Produits Dérivés',
+    'Passionné de Finance Moderne',
+  ];
   const typedEl = document.getElementById('typed-role');
-  if (!typedEl) return;
-
-  function type() {
-    const current = roles[roleIdx];
-    typedEl.textContent = deleting ? current.slice(0, charIdx--) : current.slice(0, charIdx++);
-    
-    let speed = deleting ? 40 : 80;
-    if (!deleting && charIdx === current.length) { speed = 2000; deleting = true; }
-    else if (deleting && charIdx === 0) { deleting = false; roleIdx = (roleIdx + 1) % roles.length; speed = 500; }
-    
-    setTimeout(type, speed);
+  if (typedEl) {
+    let ri = 0, ci = 0, deleting = false;
+    function tick() {
+      const word = roles[ri];
+      if (!deleting) {
+        typedEl.textContent = word.slice(0, ci + 1);
+        ci++;
+        if (ci === word.length) { deleting = true; setTimeout(tick, 1800); return; }
+        setTimeout(tick, 65);
+      } else {
+        typedEl.textContent = word.slice(0, ci - 1);
+        ci--;
+        if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; setTimeout(tick, 320); return; }
+        setTimeout(tick, 36);
+      }
+    }
+    setTimeout(tick, 900);
   }
-  type();
-}
 
-/* ─── COMPTEURS STATS ────────────────────────────────────── */
-function initCounters() {
-  const statsObserver = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.querySelectorAll('.stat-num').forEach(num => {
-          const target = +num.dataset.count;
-          let current = 0;
-          const inc = target / 50;
-          const timer = setInterval(() => {
-            current += inc;
-            if (current >= target) { num.textContent = target; clearInterval(timer); }
-            else { num.textContent = Math.floor(current); }
-          }, 30);
-        });
-        statsObserver.unobserve(e.target);
+  /* ────────────────────────────────────────────────
+     6. SCROLL REVEAL  ← THE MAIN FIX
+        Elements start opacity:0 in CSS.
+        We add class .visible which sets opacity:1.
+        We run once on load AND on every scroll.
+  ──────────────────────────────────────────────── */
+  function runReveal() {
+    const wh = window.innerHeight;
+    document.querySelectorAll('.rv, .rv-left, .rv-right').forEach(el => {
+      const { top } = el.getBoundingClientRect();
+      if (top < wh - 60) el.classList.add('visible');
+    });
+    // skill bars
+    document.querySelectorAll('.bar-fill').forEach(bar => {
+      const { top } = bar.getBoundingClientRect();
+      if (top < wh && !bar.dataset.animated) {
+        bar.dataset.animated = '1';
+        bar.style.width = bar.dataset.w + '%';
       }
     });
-  }, { threshold: 0.5 });
-
-  const heroStats = document.querySelector('.hero-stats');
-  if (heroStats) statsObserver.observe(heroStats);
-}
-
-/* ─── NAVIGATION & SMOOTH SCROLL ─────────────────────────── */
-function initNavigation() {
-  const navbar = document.getElementById('navbar');
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-link');
-
-  window.addEventListener('scroll', () => {
-    // Navbar effect
-    if (navbar) navbar.style.borderBottomColor = window.scrollY > 50 ? 'var(--border-accent)' : 'var(--border)';
-    
-    // Active Links
-    let current = "";
-    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 150) current = s.getAttribute('id'); });
-    navLinks.forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('href').includes(current)) link.classList.add('active');
-    });
-  }, { passive: true });
-
-  // Mobile Toggle
-  const toggle = document.getElementById('nav-toggle');
-  if (toggle) {
-    toggle.addEventListener('click', () => document.body.classList.toggle('nav-open'));
   }
-}
 
-/* ─── CURSEUR PERSONNALISÉ ───────────────────────────────── */
-function initCursor() {
-  const cursor = document.getElementById('cursor');
-  const trail = document.getElementById('cursor-trail');
-  if (!cursor || !trail) return;
+  // Run immediately (catches above-fold elements)
+  runReveal();
+  // Also run after fonts/images settle
+  setTimeout(runReveal, 400);
+  window.addEventListener('scroll', runReveal, { passive: true });
 
+  /* ────────────────────────────────────────────────
+     7. COUNTER ANIMATION
+  ──────────────────────────────────────────────── */
+  let counted = false;
+  function countUp() {
+    if (counted) return;
+    counted = true;
+    document.querySelectorAll('.stat-num').forEach(el => {
+      const target = parseInt(el.dataset.count, 10);
+      let v = 0;
+      const iv = setInterval(() => {
+        v += target / 40;
+        if (v >= target) { el.textContent = target; clearInterval(iv); return; }
+        el.textContent = Math.floor(v);
+      }, 30);
+    });
+  }
+  const statsEl = document.querySelector('.hero-stats');
+  if (statsEl) {
+    const ob = new IntersectionObserver(([e]) => { if (e.isIntersecting) { countUp(); ob.disconnect(); } }, { threshold: .4 });
+    ob.observe(statsEl);
+  }
+
+  /* ────────────────────────────────────────────────
+     8. ACTIVE NAV ON SCROLL
+  ──────────────────────────────────────────────── */
+  const sections  = document.querySelectorAll('section[id]');
+  const navLinks  = document.querySelectorAll('.nav-link');
+  function updateNav() {
+    const y = window.scrollY + 130;
+    sections.forEach(sec => {
+      if (y >= sec.offsetTop && y < sec.offsetTop + sec.offsetHeight) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const a = document.querySelector(`.nav-link[href="#${sec.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+    // navbar border on scroll
+    const nav = document.getElementById('navbar');
+    if (nav) nav.style.borderBottomColor = window.scrollY > 50 ? 'var(--border-a)' : 'var(--border)';
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+
+  /* ────────────────────────────────────────────────
+     9. MOBILE HAMBURGER
+  ──────────────────────────────────────────────── */
+  const burger = document.getElementById('hamburger');
+  if (burger) {
+    burger.addEventListener('click', () => {
+      document.body.classList.toggle('nav-open');
+      burger.classList.toggle('active');
+    });
+    document.querySelectorAll('.nav-link').forEach(l => {
+      l.addEventListener('click', () => {
+        document.body.classList.remove('nav-open');
+        burger.classList.remove('active');
+      });
+    });
+  }
+
+  /* ────────────────────────────────────────────────
+     10. SMOOTH SCROLL for anchor links
+  ──────────────────────────────────────────────── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+
+  /* ────────────────────────────────────────────────
+     11. BACK TO TOP
+  ──────────────────────────────────────────────── */
+  document.getElementById('back-top')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ────────────────────────────────────────────────
+     12. FLOAT CARDS PARALLAX
+  ──────────────────────────────────────────────── */
   document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-    setTimeout(() => {
-      trail.style.left = e.clientX + 'px';
-      trail.style.top = e.clientY + 'px';
-    }, 80);
+    const mx = (e.clientX / window.innerWidth  - .5) * 10;
+    const my = (e.clientY / window.innerHeight - .5) * 10;
+    document.querySelectorAll('.float-card').forEach((card, i) => {
+      const sign = i % 2 === 0 ? 1 : -1;
+      card.style.transform = `translateY(${Math.sin(Date.now() / 1000 + i) * 7}px) translate(${mx * sign * .3}px, ${my * sign * .3}px)`;
+    });
   });
 
-  document.querySelectorAll('a, button, .tc-card, .skill-category').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
-  });
-}
-
-/* ─── FORMULAIRE DE CONTACT ─────────────────────────────── */
-function sendMessage(btn) {
-  const note = document.getElementById('form-note');
-  const inputs = document.querySelectorAll('.form-input');
-  let valid = true;
-
-  inputs.forEach(inp => {
-    if (!inp.value.trim()) { inp.style.borderColor = 'rgba(255,80,80,0.6)'; valid = false; }
-    else inp.style.borderColor = '';
+  /* ────────────────────────────────────────────────
+     13. SKILL BAR BRIGHTNESS ON HOVER
+  ──────────────────────────────────────────────── */
+  document.querySelectorAll('.bar-item').forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const fill = item.querySelector('.bar-fill');
+      if (fill) fill.style.filter = 'brightness(1.3)';
+    });
+    item.addEventListener('mouseleave', () => {
+      const fill = item.querySelector('.bar-fill');
+      if (fill) fill.style.filter = '';
+    });
   });
 
-  if (!valid) { note.textContent = '⚠ Veuillez remplir tous les champs.'; return; }
+  /* ────────────────────────────────────────────────
+     14. CONTACT FORM
+  ──────────────────────────────────────────────── */
+  const fBtn = document.getElementById('f-btn');
+  if (fBtn) {
+    fBtn.addEventListener('click', () => {
+      const name  = document.getElementById('f-name');
+      const email = document.getElementById('f-email');
+      const msg   = document.getElementById('f-msg');
+      const note  = document.getElementById('f-note');
+      let ok = true;
 
-  btn.textContent = 'Envoi en cours…';
-  btn.disabled = true;
-  setTimeout(() => {
-    note.textContent = '✓ Message envoyé avec succès !';
-    btn.textContent = 'Envoyer le message →';
-    btn.disabled = false;
-    inputs.forEach(inp => inp.value = '');
-  }, 1500);
-}
+      [name, email, msg].forEach(inp => {
+        if (!inp.value.trim()) { inp.style.borderColor = 'rgba(255,80,80,.65)'; ok = false; }
+        else inp.style.borderColor = '';
+      });
 
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
- 
+      if (!ok) { note.textContent = '⚠ Veuillez remplir tous les champs.'; return; }
+
+      fBtn.textContent = 'Envoi…';
+      fBtn.disabled    = true;
+
+      setTimeout(() => {
+        note.textContent   = '✓ Message envoyé avec succès !';
+        fBtn.innerHTML     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Envoyer le message`;
+        fBtn.disabled      = false;
+        [name, email, msg].forEach(inp => inp.value = '');
+        setTimeout(() => note.textContent = '', 4000);
+      }, 1200);
+    });
+  }
+
+}); // end DOMContentLoaded
