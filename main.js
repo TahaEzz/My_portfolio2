@@ -160,8 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!deleting) {
         typedEl.textContent = word.slice(0, ci + 1);
         ci++;
-        if (ci === word.length) { deleting = true; setTimeout(tick, 300); return; }
-        setTimeout(tick, 65);
+        if (ci === word.length) { deleting = true; setTimeout(tick, 100); return; }
+        setTimeout(tick, 100);
       } else {
         typedEl.textContent = word.slice(0, ci - 1);
         ci--;
