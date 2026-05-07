@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(tick, 36);
       }
     }
-    setTimeout(tick, 900);
+    setTimeout(tick, 500);
   }
 
   /* ────────────────────────────────────────────────
