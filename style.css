@@ -407,7 +407,7 @@ svg{display:block;flex-shrink:0}
 .bar-fill{height:100%;width:0;background:var(--grad);border-radius:10px;transition:width 1.3s cubic-bezier(.4,0,.2,1)}
 
 /* lang */
-.lang-row{display:flex;justify-content:space-around;gap:.6rem;margin-top:.3rem}
+.lang-row{display:flex;justify-content:space-around;gap:.6rem;margin-top:.5rem}
 .lang-item{text-align:center;position:relative}
 .lang-ring{width:68px;height:68px;display:block;margin:0 auto .4rem;transform:rotate(-90deg)}
 .ring-bg{stroke:var(--bg-alt)}
