@@ -160,12 +160,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!deleting) {
         typedEl.textContent = word.slice(0, ci + 1);
         ci++;
-        if (ci === word.length) { deleting = true; setTimeout(tick, 180); return; }
+        if (ci === word.length) { deleting = true; setTimeout(tick, 300); return; }
         setTimeout(tick, 65);
       } else {
         typedEl.textContent = word.slice(0, ci - 1);
         ci--;
-        if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; setTimeout(tick, 320); return; }
+        if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; setTimeout(tick, 200); return; }
         setTimeout(tick, 36);
       }
     }
