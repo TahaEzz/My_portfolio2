@@ -500,6 +500,7 @@ a.cinfo-val:hover{color:var(--acc)}
 
 /* form */
 .contact-form{display:flex;flex-direction:column;gap:.9rem}
+.contact-form form{display:flex;flex-direction:column;gap:.9rem} /* ← ADD this line */
 .f-group{display:flex;flex-direction:column;gap:.36rem}
 .f-group label{display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:var(--muted);font-weight:500;letter-spacing:.04em}
 .f-group label svg{width:13px;height:13px}
