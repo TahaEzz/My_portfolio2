@@ -334,18 +334,35 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1200);
     });
   }*/
+
    /* ── 14. CONTACT FORM (Formspree) ── */
 const form = document.getElementById('contact-form');
-if (form) {
+const fBtn = document.getElementById('f-btn');
+const note = document.getElementById('f-note');
+
+if (form && fBtn) {
+  // Remove the old click listener by using form submit instead
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    const btn  = document.getElementById('f-btn');
-    const note = document.getElementById('f-note');
-    btn.textContent = 'Envoi…';
-    btn.disabled    = true;
+
+    const name  = document.getElementById('f-name');
+    const email = document.getElementById('f-email');
+    const msg   = document.getElementById('f-msg');
+    let ok = true;
+
+    // Keep original validation logic
+    [name, email, msg].forEach(inp => {
+      if (!inp.value.trim()) { inp.style.borderColor = 'rgba(255,80,80,.65)'; ok = false; }
+      else inp.style.borderColor = '';
+    });
+    if (!ok) { note.textContent = '⚠ Veuillez remplir tous les champs.'; return; }
+
+    fBtn.textContent = 'Envoi…';
+    fBtn.disabled    = true;
+
     try {
       const res = await fetch(form.action, {
-        method: 'POST',
+        method:  'POST',
         body:    new FormData(form),
         headers: { 'Accept': 'application/json' },
       });
@@ -353,16 +370,18 @@ if (form) {
         note.textContent = '✓ Message envoyé ! Je vous répondrai bientôt.';
         note.style.color = 'var(--acc)';
         form.reset();
+        [name, email, msg].forEach(inp => inp.style.borderColor = '');
       } else {
-        note.textContent = '✗ Erreur. Essayez par email directement.';
+        note.textContent = '✗ Erreur. Contactez-moi directement par email.';
         note.style.color = 'rgba(255,80,80,.9)';
       }
     } catch {
       note.textContent = '✗ Erreur réseau. Vérifiez votre connexion.';
       note.style.color = 'rgba(255,80,80,.9)';
     }
-    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Envoyer le message`;
-    btn.disabled  = false;
+
+    fBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Envoyer le message`;
+    fBtn.disabled  = false;
     setTimeout(() => note.textContent = '', 5000);
   });
 }
