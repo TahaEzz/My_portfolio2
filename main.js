@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ────────────────────────────────────────────────
      14. CONTACT FORM
   ──────────────────────────────────────────────── */
-  const fBtn = document.getElementById('f-btn');
+  /*const fBtn = document.getElementById('f-btn');
   if (fBtn) {
     fBtn.addEventListener('click', () => {
       const name  = document.getElementById('f-name');
@@ -333,6 +333,38 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => note.textContent = '', 4000);
       }, 1200);
     });
-  }
+  }*/
+   /* ── 14. CONTACT FORM (Formspree) ── */
+const form = document.getElementById('contact-form');
+if (form) {
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn  = document.getElementById('f-btn');
+    const note = document.getElementById('f-note');
+    btn.textContent = 'Envoi…';
+    btn.disabled    = true;
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body:    new FormData(form),
+        headers: { 'Accept': 'application/json' },
+      });
+      if (res.ok) {
+        note.textContent = '✓ Message envoyé ! Je vous répondrai bientôt.';
+        note.style.color = 'var(--acc)';
+        form.reset();
+      } else {
+        note.textContent = '✗ Erreur. Essayez par email directement.';
+        note.style.color = 'rgba(255,80,80,.9)';
+      }
+    } catch {
+      note.textContent = '✗ Erreur réseau. Vérifiez votre connexion.';
+      note.style.color = 'rgba(255,80,80,.9)';
+    }
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Envoyer le message`;
+    btn.disabled  = false;
+    setTimeout(() => note.textContent = '', 5000);
+  });
+}
 
 }); // end DOMContentLoaded
