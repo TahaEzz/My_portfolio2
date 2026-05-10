@@ -551,7 +551,7 @@
         </a>
       </div>
 
-      <div class="contact-form rv-right">
+      <!--<div class="contact-form rv-right">
         <div class="f-group">
           <label>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
@@ -573,33 +573,47 @@
           </label>
           <textarea id="f-msg" class="f-input f-textarea" placeholder="Votre message…"></textarea>
         </div>
-        <!--<button class="btn-primary f-submit" id="f-btn">
+        <button class="btn-primary f-submit" id="f-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           Envoyer le message
         </button>
         <p class="f-note" id="f-note"></p>-->
         
         <div class="contact-form rv-right">
-          <form id="contact-form" action="https://formspree.io/f/maqvljvr" method="POST">
-            <input type="hidden" name="_subject" value="Nouveau message depuis mon portfolio" />
-            <div class="f-group">
-              <label>...</label>
-              <input type="text" name="name" id="f-name" class="f-input" placeholder="Votre nom complet" required />
-            </div>
-            <div class="f-group">
-              <label>...</label>
-              <input type="email" name="email" id="f-email" class="f-input" placeholder="votre@email.com" required />
-            </div>
-            <div class="f-group">
-              <label>...</label>
-              <textarea name="message" id="f-msg" class="f-input f-textarea" placeholder="Votre message…" required></textarea>
-            </div>
-            <button type="submit" class="btn-primary f-submit" id="f-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              Envoyer le message
-            </button>
-            <p class="f-note" id="f-note"></p>
-          </form>
+  <form id="contact-form" action="https://formspree.io/f/maqvljvr" method="POST">
+    <input type="hidden" name="_subject" value="Nouveau message depuis mon portfolio" />
+
+    <div class="f-group">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+        Nom
+      </label>
+      <input type="text" name="name" id="f-name" class="f-input" placeholder="Votre nom complet" required />
+    </div>
+
+    <div class="f-group">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </label>
+      <input type="email" name="email" id="f-email" class="f-input" placeholder="votre@email.com" required />
+    </div>
+
+    <div class="f-group">
+      <label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Message
+      </label>
+      <textarea name="message" id="f-msg" class="f-input f-textarea" placeholder="Votre message…" required></textarea>
+    </div>
+
+    <button type="submit" class="btn-primary f-submit" id="f-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Envoyer le message
+    </button>
+    <p class="f-note" id="f-note"></p>
+
+    </form>
         </div>
       </div>
     </div>
